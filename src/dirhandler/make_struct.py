@@ -1,10 +1,12 @@
 import json
 
+"""
+
 json_file = "examples/loops.json"
 with open(json_file, 'r') as f:
     folder_data = json.load(f)
 
-myloops = {"x":"3", "y":"2"}
+myloops = {"x":"3", "y":"2"}"""
 
 
 def replace_keys(json_struct,
@@ -39,7 +41,7 @@ def print_multi(json_struct,
                 print(f"{i} DOES NOT contain an {key}")
 
 def print_numbered(json_struct,
-                   placeholder_key):
+                   placeholder_key={}):
     """
     Loops through the json data, prints each part the specified number of times
     from the loops dictionary.
@@ -50,6 +52,7 @@ def print_numbered(json_struct,
             if str(key) in str(i):
                 value = int(placeholder_key[key])
                 for k in range(value):
+                    pass
                     #print(f"printing {k}")
                     print(str(i).replace(str(key), str(k)))
             else:
@@ -57,7 +60,16 @@ def print_numbered(json_struct,
                 pass
 
 
-#replace_keys(folder_data, myloops)
-#check_for_keys(folder_data, myloops)
-#print_multi(folder_data, myloops)
-print_numbered(folder_data, myloops)
+def set_value(dictionary, name, definition):
+    dictionary[name] = definition
+
+def set_definitions(dictionary=None):
+    default_dictionary = {"x":"3", "y":"2"}
+    if dictionary == None:
+        dictionary = default_dictionary
+    else:
+        for i in dictionary:
+            default_dictionary[i] = dictionary[i]
+        dictionary = default_dictionary
+
+    return dictionary
