@@ -1,9 +1,6 @@
 import pytest
 import dirhandler as dh
 
-def test_succeeds2():
-    assert 1 == 1
-
 def test_set_definition_default():
     my_definitions = {"x":"3", "y":"2"}
     default_definitions = dh.set_definitions()

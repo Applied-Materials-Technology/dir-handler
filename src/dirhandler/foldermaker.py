@@ -1,24 +1,11 @@
 import os
 import json
-import argparse
 import pathlib
+import argparse
+import click
 from enum import Enum
 
-"""define the arguments for making folders"""
-parser = argparse.ArgumentParser()
-parser.add_argument('-x', action='store_true',
-                    help="takes example file structures when present")
-parser.add_argument("--filename", default = 'examples/nestedtstruc.json', 
-                    type = str,
-                    help="path to json file to read structure")
-parser.add_argument("--location", default = '.', 
-                    type = str,
-                    help="path to create folders in")
 
-args = parser.parse_args()
-
-example_json = {"simpleexample":"example/simplestruc.json",
-                "nestedexample":"example/nestedstrc.json"}
 
 def create_folder_structure(base_path: str, 
                             structure: dict):
@@ -52,9 +39,12 @@ def create_folder_structure(base_path: str,
         f = open(path, "w")
         f.close
 
-def start(x=args.x, 
-          filename=args.filename, 
-          location=args.location):
+
+@click.command()
+@click.option('--example', '-x', is_flag=True, help="takes example file structures when present")
+@click.option('--filename', default='examples/nestedtstruc.json', help="path to json file to read structure")
+@click.option('--location', default='.', help="path to create folders in")
+def start(example,filename,location):
     
     """
     Read the json structure file and call directory maker function
@@ -71,7 +61,7 @@ def start(x=args.x,
         Where the directory structure should be made
     """
 
-    if x == True:
+    if example == True:
         base_dir = pathlib.Path(__file__).parent.resolve() # change eventually __file__ bad...
         json_file = os.path.join(base_dir, filename)
     else:
@@ -85,3 +75,4 @@ def start(x=args.x,
 
     create_folder_structure('.', folder_data)
     print("Folder structure created successfully!")
+
