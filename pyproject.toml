@@ -19,6 +19,7 @@ classifiers = [
 requires-python = ">=3.10"
 dependencies = [
   "pyYAML>=6.0.2",
+  "click>=8.3.1"
 ]
 
 [project.scripts]
