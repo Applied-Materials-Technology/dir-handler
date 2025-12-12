@@ -1,7 +1,6 @@
 import os
 import json
 import pathlib
-#import argparse
 import click
 from enum import Enum
 
@@ -76,7 +75,9 @@ def startclick(example,filename,location):
     create_folder_structure('.', folder_data)
     print("Folder structure created successfully!")
 
-def start(example = False, filename = 'examples/nestedtstruc.json' ,location = '.'):
+def start(example = False, 
+          filename = 'examples/nestedtstruc.json',
+          location = '.'):
 
     """
     Allow for click command to be called as a function

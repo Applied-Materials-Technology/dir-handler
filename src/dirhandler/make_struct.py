@@ -1,4 +1,5 @@
 import json
+from typing import List
 
 """
 
@@ -43,24 +44,30 @@ def print_multi(json_struct,
 def print_numbered(json_struct,
                    placeholder_key={}):
     """
-    Loops through the json data, prints each part the specified number of times
-    from the loops dictionary.
+    Loops through the json data, and either:
+    prints each part the specified number of times from the loops dictionary.
+    or prints each part and replaces it with entries of a given list
     """
     
     for i in json_struct:
         for key in placeholder_key.keys():
             if str(key) in str(i):
-                value = int(placeholder_key[key])
-                for k in range(value):
-                    pass
-                    #print(f"printing {k}")
-                    print(str(i).replace(str(key), str(k)))
+                value = placeholder_key[key]
+                if type(value) == list:
+                    for k in value:
+                        print(str(i).replace(str(key), str(k)))
+                else:
+                    for k in range(int(value)):
+                        print(str(i).replace(str(key), str(k)))
             else:
-                #print(f"{i} DOES NOT contain an {key}")
                 pass
+            
 
 
-def set_value(dictionary, name, definition):
+def set_value(dictionary, 
+              name, 
+              definition):
+    
     dictionary[name] = definition
 
 def set_definitions(dictionary=None):
@@ -68,8 +75,10 @@ def set_definitions(dictionary=None):
     if dictionary == None:
         dictionary = default_dictionary
     else:
-        for i in dictionary:
-            default_dictionary[i] = dictionary[i]
-        dictionary = default_dictionary
+        #for i in dictionary:
+        #    default_dictionary[i] = dictionary[i]
+        #dictionary = default_dictionary
+        #not sure why above exists... keep in case breaks for now
+        dictionary = dictionary
 
     return dictionary
