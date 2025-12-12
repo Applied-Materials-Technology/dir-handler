@@ -23,7 +23,7 @@ dependencies = [
 ]
 
 [project.scripts]
-makedirs = "dirhandler.foldermaker:start"
+makedirs = "dirhandler.foldermaker:startclick"
 
 
 [tool.setuptools.packages.find]

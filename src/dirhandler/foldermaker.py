@@ -1,7 +1,7 @@
 import os
 import json
 import pathlib
-import argparse
+#import argparse
 import click
 from enum import Enum
 
@@ -44,16 +44,16 @@ def create_folder_structure(base_path: str,
 @click.option('--example', '-x', is_flag=True, help="takes example file structures when present")
 @click.option('--filename', default='examples/nestedtstruc.json', help="path to json file to read structure")
 @click.option('--location', default='.', help="path to create folders in")
-def start(example,filename,location):
+def startclick(example,filename,location):
     
     """
-    Read the json structure file and call directory maker function
+    Click cimmand ot read the json structure file and call directory maker function
 
 
     Parameters
     ----------
 
-    x: bool
+    example: bool
         Whether the json is a premade example (True) or a unique json (False)
     filename: str
         Path to json file to read (excluding path to examples folder)
@@ -76,3 +76,19 @@ def start(example,filename,location):
     create_folder_structure('.', folder_data)
     print("Folder structure created successfully!")
 
+def start(example = False, filename = 'examples/nestedtstruc.json' ,location = '.'):
+
+    """
+    Allow for click command to be called as a function
+
+    Parameters
+    ----------
+
+    example: bool
+        Whether the json is a premade example (True) or a unique json (False)
+    filename: str
+        Path to json file to read (excluding path to examples folder)
+    location: str
+        Where the directory structure should be made
+    """
+    startclick.callback(example, filename, location)
