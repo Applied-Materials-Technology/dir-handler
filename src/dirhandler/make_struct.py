@@ -62,7 +62,21 @@ def print_numbered(json_struct,
             else:
                 pass
             
-
+def translate_line(line,
+                   placeholder_key = {}):
+        
+    for key in placeholder_key.keys():
+        if str(key) in str(line):
+            value = placeholder_key[key]
+            if type(value) == list:
+                for k in value:
+                    print(str(line).replace(str(key), str(k)))
+            else:
+                for k in range(int(value)):
+                    print(str(line).replace(str(key), str(k)))
+        else:
+            pass
+        
 
 def set_value(dictionary, 
               name, 
