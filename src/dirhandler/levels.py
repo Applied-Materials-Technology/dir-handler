@@ -5,36 +5,42 @@ import click
 import os
 import pathlib
 
+def rewrite_path(old_path, to_replace, replacement):
+
+    path_name = str(old_path).replace(to_replace, str(replacement))
+    
+    return path_name
+
 def translate_line(base_path,
                    line,
-                   placeholder_key = {"folder12": "ivebeenreplaced"}):
+                   placeholder_key = {"12": "ivebeenreplaced", "folder_spec": "FOLDER"}):
     
-    # this works, however it will replace too much, so keys have to be chosen wisely
-        
+    
+    path = os.path.join(base_path, line)
     for key in placeholder_key.keys():
         if str(key) in str(line):
             value = placeholder_key[key]
-            if type(value) == list:
+
+            if type(value) == str:
+                to_replace = f"[{str(key)}]"
+                path = rewrite_path(path, to_replace, str(value))
+
+            elif type(value) == list:
+                path = os.path.join(base_path, line)
                 for k in value:
-                    foldername = str(line).replace(str(key), str(k))
-                    path = os.path.join(base_path, foldername)
-                    print(path)
-                    #os.makedirs(path, exist_ok=True)
+                    print(k)
+                    to_replace = f"[{str(key)}]"
+                    path = rewrite_path(path, to_replace, str(k))
+
             elif type(value) == int:
+                path = os.path.join(base_path, line)
                 for k in range(int(value)):
-                    foldername = str(line).replace(str(key), str(k))
-                    path = os.path.join(base_path, foldername)
-                    print(path)
-                    #os.makedirs(path, exist_ok=True)
-            else:
-                foldername = str(line).replace(str(key), str(value))
-                path = os.path.join(base_path, foldername)
-                print(path)
-                #os.makedirs(path, exist_ok=True)
+                    to_replace = f"[{str(key)}]"
+                    path = rewrite_path(path, to_replace, str(k))
         else:
             path = os.path.join(base_path, line)
-            print(path)
-            #os.makedirs(path, exist_ok=True)
+
+    return path
 
 def create_folder_structure(base_path: str, 
                             structure: dict):
@@ -54,18 +60,13 @@ def create_folder_structure(base_path: str,
 
     if isinstance(structure, list):
         for folder_name in structure:
-            translate_line(base_path, folder_name)
-            #path = os.path.join(base_path, folder_name)
-            #os.makedirs(path, exist_ok=True)
+            path = translate_line(base_path, folder_name)
             #print(f"Created directory: {path} via list")
-            #print(path)
     elif isinstance(structure, dict):
         for folder_name, sub_structure in structure.items():
             path = os.path.join(base_path, folder_name)
-            #os.makedirs(path, exist_ok=True)
-            #print(f"Created directory: {path} via dict")
-            #print(path)
-            translate_line(base_path, folder_name)
+            path = translate_line(base_path, folder_name)
+            print(path)
             create_folder_structure(path, sub_structure)
     elif isinstance(structure, str):
         #path = base_path+"/"+structure+".txt"
@@ -103,7 +104,7 @@ def startclick(example,filename,location):
 
     with open(json_file, 'r') as f:
         folder_data = json.load(f)
-        print(type(folder_data))
+        #print(type(folder_data))
 
     os.chdir(location)
 
