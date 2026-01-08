@@ -70,17 +70,17 @@ Make sure your virtual environment with the package installed is activated.
 
 Import the directory maker
 ```python
-import dirhandler.foldermaker as dh
+import dirhandler as dh
 ```
 
 Create folders from the default example file stored at src/dirhandler/examples/nestedstruct.json in your current directory:
 ```python
-dh.start(x=True) 
+dh.levels.start(x=True) 
 ```
 
 Create folders from a specific JSON file in a specific directory:
 ```python
-dh.start(filename = "path/to/file.json", location = "path/to/dir_creation")
+dh.levels.start(filename = "path/to/file.json", location = "path/to/dir_creation")
 ```
 
 ## Creating JSON structures

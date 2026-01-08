@@ -4,7 +4,7 @@ import pathlib
 import click
 from enum import Enum
 
-
+# version that can work in simple json structure case
 
 def create_folder_structure(base_path: str, 
                             structure: dict):

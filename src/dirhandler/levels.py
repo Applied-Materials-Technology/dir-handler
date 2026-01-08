@@ -147,11 +147,6 @@ class FolderMaker():
         self.current_path = init_path 
         self.current_folder = current_folder
 
-        #print(self.folder_data.items())
-        # for folder_name, sub_structure in self.folder_data.items():
-        #     print(f"foldername is {folder_name}")
-        #     print(f"substructure is {sub_structure}")
-
         self.create_folder_structure(self.init_path, self.folder_data)
 
     def rewrite_path(self, 
@@ -168,7 +163,7 @@ class FolderMaker():
     def translate_line(self,
                        base_path,
                        line,
-                       placeholder_key = {"12": "imreplaced", "folder_spec":"FOLDER"}):
+                       placeholder_key = {"12": "imreplaced", "folder_spec":"FOLDER", "counting":["one","two"]}):
         
         
         #path = os.path.join(base_path, line)
@@ -186,10 +181,12 @@ class FolderMaker():
 
                 elif type(value) == list:
                     path = os.path.join(base_path, line)
+
                     for k in value:
                         print(k)
                         to_replace = f"[{str(key)}]"
-                        path = self.rewrite_path(path, to_replace, str(k))
+                        #path = self.rewrite_path(path, to_replace, str(k))
+                        #make the folder here?
 
                 elif type(value) == int:
                     # path = os.path.join(base_path, line)
@@ -233,7 +230,7 @@ class FolderMaker():
                 #print(folder_name)
                 self.translate_line(base_path, self.current_folder)
                 path = os.path.join(base_path, self.current_folder)
-                print(path)
+                print(path)#move this to the translate line section?
                 self.create_folder_structure(path, sub_structure)
                 #self.create_folder_structure(self.current_folder, sub_structure)
         elif isinstance(structure, str):

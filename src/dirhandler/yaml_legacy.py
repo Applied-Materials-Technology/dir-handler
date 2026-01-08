@@ -4,13 +4,15 @@ from dirhandler.json_legacy import Level
 import argparse
 import os
 
+#yaml not supported
+
 parser = argparse.ArgumentParser()
 parser.add_argument("--filename", default = 'example/structureexample.yaml', type = str)
 parser.add_argument("--location", default = str(os.getcwd()), type = str)
 
 args = parser.parse_args()
 
-""""""
+
 def search_children(yaml_data, level_finder):
 
     """
@@ -37,18 +39,9 @@ def read_yaml(yaml_file, level_finder):
 
     with open(yaml_file, 'r') as f:
         yaml_data = list(yaml.load_all(f, Loader=SafeLoader))
-        #print(yaml_data)
-        #print(yaml_data[0]["folder2"])
         print(yaml_data[0])
-
-    #search_children(yaml_data, level_finder)
-
 
 def start():
     level_finder = Level()
     read_yaml(args.filename, level_finder)
 
-"""    
-if __name__ == '__main__':
-    level_finder = Level()
-    read_yaml(args.filename)"""

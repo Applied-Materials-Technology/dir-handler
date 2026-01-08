@@ -3,6 +3,8 @@ from pathlib import Path
 import argparse
 import json
 
+# code for old json reader - works for simple case where no replacements are to occur
+
 
 parser = argparse.ArgumentParser()
 parser.add_argument("--filename", default = 'examples/structureexample.json', type = str)
@@ -132,8 +134,4 @@ def start():
     level_finder = Level()
     read_json(args.filename, level_finder)
     
-"""
-if __name__ == '__main__':
-    level_finder = Level()
-    read_json(args.filename)"""
 
