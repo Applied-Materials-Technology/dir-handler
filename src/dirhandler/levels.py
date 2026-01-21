@@ -184,7 +184,6 @@ class FolderMaker():
                     current_folder = []
 
                     for k in value:
-                        print(k)
                         to_replace = f"[{str(key)}]"
                         current_folder.append(str(self.current_folder).replace(to_replace, str(k)))
                         #path = self.rewrite_path(path, to_replace, str(k))
@@ -202,10 +201,6 @@ class FolderMaker():
             else:
                 path = os.path.join(base_path, line)
 
-            #print(path)
-
-        #return path
-        #return folder_name
 
     def create_folder_structure(self,
                                 base_path: str, 
@@ -223,31 +218,35 @@ class FolderMaker():
         structure: dict
             The dictionary data that contains the desired directory structure
         """
-
+        path = []
         if isinstance(structure, list):
             for folder_name in structure:
-                path = self.translate_line(base_path, folder_name)
+                path2 = self.translate_line(base_path, folder_name)
+                path.append(path2)
         elif isinstance(structure, dict):
             for folder_name, sub_structure in structure.items():
                 self.current_folder = folder_name
-                #print(f"base path is {base_path}")
                 self.translate_line(base_path, self.current_folder)
 
                 if type(self.current_folder) == list:
                     for i in self.current_folder:
-                        #print(f"i is {i} and im in list ")
-                        path = os.path.join(base_path, i)
-                        print(path)
+                        path2 = os.path.join(base_path, i)
+                        path.append(path2)
+                        #print(path2)
                 elif type(self.current_path) == str:
-                    #print(f"i and im in str")
-                    path = os.path.join(base_path, self.current_folder)
-                    print(path)
+                    path2 = os.path.join(base_path, self.current_folder)
+                    path.append(path2)
+                    #print(path2)
                 else:
-                    #print(f"im in else")
-                    path = os.path.join(base_path, self.current_folder)
-                    print(path)
+                    path2 = os.path.join(base_path, self.current_folder)
+                    path.append(path2)
+                    #print(path2)
 
-                self.create_folder_structure(path, sub_structure)
+                print(path)
+
+                for i in path:
+                    self.create_folder_structure(i, sub_structure)
+
         elif isinstance(structure, str):
             #path = base_path+"/"+structure+".txt"
             #f = open(path, "w")
