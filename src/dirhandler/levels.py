@@ -1,9 +1,8 @@
-import make_struct
-import foldermaker
 import json
 import click
 import os
 import pathlib
+from typing import List
 
 def rewrite_path(old_path, to_replace, replacement):
 
@@ -107,11 +106,9 @@ def startclick(example,filename,location):
 
     with open(json_file, 'r') as f:
         folder_data = json.load(f)
-        #print(type(folder_data))
 
     os.chdir(location)
 
-    #create_folder_structure('.', folder_data)
     folder_maker = FolderMaker('.', folder_data, None, None)
     print("Folder structure created successfully!")
 
@@ -177,16 +174,23 @@ class FolderMaker():
                     #path = self.rewrite_path(base_path, line, to_replace, str(value))
                     #print(path)
                     #folder_name = str(line).replace(to_replace, str(value))
+                    if type(self.current_folder) is List:
+                        for i in self.current_folder:
+                            pass
                     self.current_folder = str(self.current_folder).replace(to_replace, str(value))
 
                 elif type(value) == list:
                     path = os.path.join(base_path, line)
+                    current_folder = []
 
                     for k in value:
                         print(k)
                         to_replace = f"[{str(key)}]"
+                        current_folder.append(str(self.current_folder).replace(to_replace, str(k)))
                         #path = self.rewrite_path(path, to_replace, str(k))
                         #make the folder here?
+
+                    self.current_folder = current_folder
 
                 elif type(value) == int:
                     # path = os.path.join(base_path, line)
@@ -226,13 +230,24 @@ class FolderMaker():
         elif isinstance(structure, dict):
             for folder_name, sub_structure in structure.items():
                 self.current_folder = folder_name
-                #path = self.translate_line(base_path, folder_name)
-                #print(folder_name)
+                #print(f"base path is {base_path}")
                 self.translate_line(base_path, self.current_folder)
-                path = os.path.join(base_path, self.current_folder)
-                print(path)#move this to the translate line section?
+
+                if type(self.current_folder) == list:
+                    for i in self.current_folder:
+                        #print(f"i is {i} and im in list ")
+                        path = os.path.join(base_path, i)
+                        print(path)
+                elif type(self.current_path) == str:
+                    #print(f"i and im in str")
+                    path = os.path.join(base_path, self.current_folder)
+                    print(path)
+                else:
+                    #print(f"im in else")
+                    path = os.path.join(base_path, self.current_folder)
+                    print(path)
+
                 self.create_folder_structure(path, sub_structure)
-                #self.create_folder_structure(self.current_folder, sub_structure)
         elif isinstance(structure, str):
             #path = base_path+"/"+structure+".txt"
             #f = open(path, "w")
