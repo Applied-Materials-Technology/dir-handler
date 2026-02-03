@@ -68,25 +68,51 @@ class FolderMaker():
         
         self.init_path = init_path
         self.folder_data = folder_data
-        self.current_path = init_path 
+        self.current_path = [init_path] 
         self.current_folder = current_folder
 
         self.create_folder_structure(self.init_path, self.folder_data, self.current_path, self.current_folder)
+        self.print_json(self.folder_data, root=True)
 
     def create_folder_structure(self, initpath ,folderdata, currentpath, currentfolder):
         
-        # for folder_name, sub_structure in self.folder_data.items():
-        #     print(f"foldername is {folder_name}")
-        #     print(f"substructure is {sub_structure}")
-        #     print(f"substructure is {bool(sub_structure)}")
-        #     #if type(sub_structure) is dict:
-        #     #if sub_structure == True:
-        #     if bool(sub_structure) == True:
-        #         #self.create_folder_structure(self.init_path, sub_structure, self.current_path, self.current_folder)
+        # for foldername in folderdata:
+        #     print("/".join(self.current_path)+"/"+foldername)
+        #     new_folderdata = folderdata[foldername]
+        #     if type(new_folderdata) is dict:
+        #         #print("/".join(self.current_path)+"/"+foldername)
+        #         self.current_path.append(foldername)
+        #         self.create_folder_structure(self.init_path, new_folderdata, self.current_path, self.current_folder)
+        #     else:
+        #         #print("/".join(self.current_path)+"/"+foldername)
         #         pass
+        pass
 
-        for foldername in self.folder_data:
-            print(foldername)
-            print(folderdata[foldername])
-            if bool(folderdata[foldername]) is True:
-                self.create_folder_structure(self.init_path, foldername, self.current_path, self.current_folder)
+    def print_json(self, folderdata, indent="", is_last=True, root=False):
+        if isinstance(folderdata, dict):
+
+            if root:
+                path_symbol = ""
+            else:
+                path_symbol = indent + ("└── " if is_last else "├── ")
+                
+            for i, (key, value) in enumerate(folderdata.items()):
+                last_item = (i == len(folderdata) - 1)
+                print(f"{path_symbol}{key}")
+                
+                new_indent = indent + ("    " if is_last or root else "│   ")
+                if isinstance(value, (dict, list)):
+                    self.print_json(value, new_indent, last_item)
+                else:
+                    val_prefix = new_indent + ("└── " if last_item else "├── ")
+                    print(f"{val_prefix}{value}")
+
+        elif isinstance(folderdata, list):
+            for i, item in enumerate(folderdata):
+                last_item = (i == len(folderdata) - 1)
+                new_indent = indent + ("    " if is_last else "│   ")
+                
+                if isinstance(item, (dict, list)):
+                    self.print_json(item, new_indent, last_item)
+                else:
+                    print(f"{new_indent}{'└── ' if last_item else '├── '}{item}")
