@@ -71,23 +71,10 @@ class FolderMaker():
         self.current_path = [init_path] 
         self.current_folder = current_folder
 
-        self.create_folder_structure(self.init_path, self.folder_data, self.current_path, self.current_folder)
+        #self.create_folder_structure(self.init_path, self.folder_data, self.current_path, self.current_folder)
         #self.print_json(self.folder_data, root=True)
         self.print_testing(self.folder_data, root=True)
 
-    def create_folder_structure(self, initpath ,folderdata, currentpath, currentfolder):
-        
-        # for foldername in folderdata:
-        #     print("/".join(self.current_path)+"/"+foldername)
-        #     new_folderdata = folderdata[foldername]
-        #     if type(new_folderdata) is dict:
-        #         #print("/".join(self.current_path)+"/"+foldername)
-        #         self.current_path.append(foldername)
-        #         self.create_folder_structure(self.init_path, new_folderdata, self.current_path, self.current_folder)
-        #     else:
-        #         #print("/".join(self.current_path)+"/"+foldername)
-        #         pass
-        pass
 
     def print_json(self, 
                    folderdata, 
@@ -130,7 +117,7 @@ class FolderMaker():
                 else:
                     print(f"{new_indent}{'└── ' if last_item else '├── '}{item}")
 
-    def print_testing2(self, folderdata, indent="│   ", is_last=True, root=False):
+    def print_testing2(self, folderdata, indent="│   ", is_last=True, root=False, counter=0):
 
         if isinstance(folderdata, dict):
 
@@ -142,14 +129,20 @@ class FolderMaker():
             for i, (key, value) in enumerate(folderdata.items()):
 
                 last_item = (i == len(folderdata) - 1)
-                print(f"{path_symbol}{key}")
+                print(f"{path_symbol}{key}{counter}")
+                #os.mkdir(f"{key}{counter}")
                 
                 new_indent = indent + ("    " if is_last or root else "│   ")
                 if isinstance(value, (dict, list)):
-                    self.print_testing(value, new_indent, last_item)
+                    if last_item == True:
+                        counternew = counter-1 # where we would go down a directory
+                        os.chdir("..")
+                    counternew = counter+1 # where we would go up a directory
+                    #os.chdir(f"{key}{counter}")
+                    self.print_testing(value, new_indent, last_item, counter=counternew)
                 else:
                     val_prefix = new_indent + ("└── " if last_item else "├── ")
-                    print(f"{val_prefix}{value}")
+                    print(f"{val_prefix}{value}.txt{counter}")
 
 
     def print_testing(self, folderdata, indent="│   ", is_last=False, root=False, counter=0):
@@ -165,7 +158,7 @@ class FolderMaker():
 
                 last_item = (i == len(folderdata) - 1)
                 print(f"{path_symbol}{key}{counter}")
-                os.mkdir(f"{key}{counter}")
+                #os.mkdir(f"{key}{counter}")
                 
                 new_indent = indent + ("    " if is_last or root else "│   ")
                 if isinstance(value, (dict, list)):
@@ -173,7 +166,7 @@ class FolderMaker():
                         counternew = counter-1 # where we would go down a directory
                         os.chdir("..")
                     counternew = counter+1 # where we would go up a directory
-                    os.chdir(f"{key}{counter}")
+                    #os.chdir(f"{key}{counter}")
                     self.print_testing(value, new_indent, last_item, counter=counternew)
                 else:
                     val_prefix = new_indent + ("└── " if last_item else "├── ")
