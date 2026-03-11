@@ -157,17 +157,31 @@ class FolderMaker():
             for i, (key, value) in enumerate(folderdata.items()):
 
                 last_item = (i == len(folderdata) - 1)
-                print(f"{path_symbol}{key}{counter}")
-                #os.mkdir(f"{key}{counter}")
                 
                 new_indent = indent + ("    " if is_last or root else "│   ")
                 if isinstance(value, (dict, list)):
                     if last_item == True:
-                        counternew = counter-1 # where we would go down a directory
+                        print(f"{path_symbol}{key}-{counter}")
+                        os.mkdir(f"{key}-{counter}")
+                        counternew = counter-1
                         os.chdir("..")
-                    counternew = counter+1 # where we would go up a directory
-                    #os.chdir(f"{key}{counter}")
+                    else:
+                        if bool(value)==True:
+                            print(f"{path_symbol}{key}-{counter}")
+                            os.mkdir(f"{key}-{counter}")
+                            os.chdir(f"{key}-{counter}")
+                            counternew = counter+1
+                        else:
+                            print(f"{path_symbol}{key}-{counter}")
+                            os.mkdir(f"{key}-{counter}")
+                            counternew = counter
+
                     self.print_testing(value, new_indent, last_item, counter=counternew)
                 else:
                     val_prefix = new_indent + ("└── " if last_item else "├── ")
                     print(f"{val_prefix}{value}.txt{counter}")
+                    os.mkdir(f"{key}-{counter}")
+                    os.chdir(f"{key}-{counter}")
+                    with open(f"{value}.txt{counter}", "a") as f:
+                        f.write(" ")
+                    os.chdir("..")
