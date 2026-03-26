@@ -75,11 +75,18 @@ class FolderMaker():
         self.current_folder = current_folder
         self.translation = {}
 
-        #self.make_folders(self.folder_data, root=True)
+        self.make_folders_adjusted(self.folder_data, root=True)
         #self.print_only(self.folder_data, root=True)
         self.check_text("I am {a} little st{ring} with some stuff",1)
         #self.check_text("I am a little string with some stuff",1)
 
+    def path_edit(self, path, mode):
+
+        """
+        Adjusts paths with updated folder names
+        """
+
+        pass
 
     def check_text(self, filename, counterstart):
 
@@ -90,18 +97,19 @@ class FolderMaker():
 
         if bool(res) == False:
 
-            return None
+            return filename
         
         elif bool(res) == True:
 
-            for i in self.translation:
-                if i in filename:
+            # for i in self.translation:
+            #     if i in filename:
 
-                    return filename.replace(i)
+            #         return filename.replace(i)
                 
-                else:
+            #     else:
 
-                    return None
+            #         return None
+            return filename.replace("replacement")
         
 
 
@@ -133,6 +141,50 @@ class FolderMaker():
                             counternew = counter+1
                         else:
                             print(f"{path_symbol}{key}-{counter}")
+                            os.mkdir(f"{key}-{counter}")
+                            counternew = counter
+
+                    self.make_folders(value, new_indent, last_item, counter=counternew)
+                else:
+                    val_prefix = new_indent + ("└── " if last_item else "├── ")
+                    print(f"{val_prefix}{value}.txt{counter}")
+                    os.mkdir(f"{key}-{counter}")
+                    os.chdir(f"{key}-{counter}")
+                    with open(f"{value}.txt{counter}", "a") as f:
+                        f.write(" ")
+                    os.chdir("..")
+
+    def make_folders_adjusted(self, folderdata, indent="│   ", is_last=False, root=False, counter=0):
+
+        if isinstance(folderdata, dict):
+
+            if root:
+                path_symbol = "├──"
+            else:
+                path_symbol = indent + ("└── " if is_last else "├── ")
+                
+            for i, (key, value) in enumerate(folderdata.items()):
+
+                last_item = (i == len(folderdata) - 1)
+                
+                new_indent = indent + ("    " if is_last or root else "│   ")
+                if isinstance(value, (dict, list)):
+                    if last_item == True:
+                        myfilename = f"{path_symbol}{key}-{counter}"
+                        print(self.check_text(filename=myfilename, counterstart=counter))
+                        os.mkdir(f"{key}-{counter}")
+                        counternew = counter-1
+                        os.chdir("..")
+                    else:
+                        if bool(value)==True:
+                            myfilename = f"{path_symbol}{key}-{counter}"
+                            print(self.check_text(filename=myfilename, counterstart=counter))
+                            os.mkdir(f"{key}-{counter}")
+                            os.chdir(f"{key}-{counter}")
+                            counternew = counter+1
+                        else:
+                            myfilename = f"{path_symbol}{key}-{counter}"
+                            print(self.check_text(filename=myfilename, counterstart=counter))
                             os.mkdir(f"{key}-{counter}")
                             counternew = counter
 
