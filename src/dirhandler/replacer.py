@@ -76,10 +76,9 @@ class FolderMaker():
         self.current_folder = current_folder
         self.translation = {}
 
-        #self.make_folders(self.folder_data, root=True)
+        self.make_folders(self.folder_data, root=True)
         #self.print_only(self.folder_data, root=True)
-        self.check_text("I am {a} little st{ring} with some stuff",1)
-        #self.check_text("I am a little string with some stuff",1)
+        #self.check_text("I am {a} little st{ring} with some stuff",1)
 
 
     def check_text(self, filename, counterstart):
@@ -96,7 +95,7 @@ class FolderMaker():
 
         if bool(res) == False:
 
-            return None
+            return filename
         
         elif bool(res) == True:
 
@@ -128,6 +127,9 @@ class FolderMaker():
                 new_indent = indent + ("    " if is_last or root else "│   ")
                 if isinstance(value, (dict, list)):
                     if last_item == True:
+                        new_test = self.check_text(key, counterstart=1)
+                        print(f"new test is {new_test}")
+                        print(f"key is {key}")
                         print(f"{path_symbol}{key}-{counter}")
                         os.mkdir(f"{key}-{counter}")
                         counternew = counter-1
