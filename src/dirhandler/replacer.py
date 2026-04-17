@@ -39,6 +39,7 @@ def startclick(example,filename,location):
     os.chdir(location)
 
     folder_maker = FolderMaker('.', folder_data, None, None, None)
+    #folder_maker.check_text("I am {a} little st{ring} with some stuff",1)
     print("Folder structure created successfully!")
 
 def start(example = False, 
@@ -88,20 +89,26 @@ class FolderMaker():
         # Extract all substrings inside brackets
         res = re.findall(r"\{(.*?)\}", filename)
 
+
+        if bool(self.translation) == False:
+            #for testing purposes
+            self.translation = {"a": "REPLACE1", "ring": "REPLACE2"}
+
         if bool(res) == False:
 
             return None
         
         elif bool(res) == True:
 
-            for i in self.translation:
-                if i in filename:
+            for i in res:
+                thing = "{"+str(i)+"}"
+                filename = filename.replace(thing, "REPLACE")
 
-                    return filename.replace(i)
+            print(filename)
+
+            return filename
+
                 
-                else:
-
-                    return None
         
 
 
