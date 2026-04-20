@@ -76,11 +76,22 @@ class FolderMaker():
         self.current_folder = current_folder
         self.translation = {}
 
+<<<<<<< HEAD
         self.make_folders(self.folder_data, root=True)
+=======
+        self.make_folders_adjusted(self.folder_data, root=True)
+>>>>>>> 2d2678fbbd00419918895df5a153c5a4eada19af
         #self.print_only(self.folder_data, root=True)
         self.check_text("I am {a} little st{ring} with some stuff",1)
         #self.check_text("I am a little string with some stuff",1)
 
+    def path_edit(self, path, mode):
+
+        """
+        Adjusts paths with updated folder names
+        """
+
+        pass
 
     def check_text(self, filename, counterstart):
 
@@ -100,6 +111,7 @@ class FolderMaker():
         
         elif bool(res) == True:
 
+<<<<<<< HEAD
             for i in res:
                 thing = "{"+str(i)+"}"
                 filename = filename.replace(thing, "REPLACE")
@@ -109,6 +121,17 @@ class FolderMaker():
             return filename
 
                 
+=======
+            # for i in self.translation:
+            #     if i in filename:
+
+            #         return filename.replace(i)
+                
+            #     else:
+
+            #         return None
+            return filename.replace("replacement")
+>>>>>>> 2d2678fbbd00419918895df5a153c5a4eada19af
         
 
 
