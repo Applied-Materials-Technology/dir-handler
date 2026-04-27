@@ -80,8 +80,8 @@ class FolderMaker():
         self.make_folders(self.folder_data, root=True)
 
         #self.print_only(self.folder_data, root=True)
-        self.check_text("I am {a} little st{ring} with some stuff",1)
-        #self.check_text("I am a little string with some stuff",1)
+        #self.check_text("I am [a] little st[ring] with some stuff",1)
+        #self.check_text("I am {a} little st{ring} with some stuff",1)
 
     def path_edit(self, path, mode):
 
@@ -96,12 +96,13 @@ class FolderMaker():
         """pseudo"""
 
         # Extract all substrings inside brackets
-        res = re.findall(r"\{(.*?)\}", filename)
+        #res = re.findall(r"\{(.*?)\}", filename)
+        res = re.findall(r"\[(.*?)\]", filename)
 
 
         if bool(self.translation) == False:
             #for testing purposes
-            self.translation = {"a": "REPLACE1", "ring": "REPLACE2"}
+            self.translation = {"a": "REPLACE1", "ring": "REPLACE2", "COUNTING": "REPLACECOUNT", "folder_spec": "REPLACEDSPEC"}
 
         if bool(res) == False:
 
@@ -111,12 +112,13 @@ class FolderMaker():
 
 
             for i in res:
-                thing = "{"+str(i)+"}"
+                #thing = "{"+str(i)+"}"
+                thing = "["+str(i)+"]"
                 filename = filename.replace(thing, "REPLACE")
 
-            print(filename)
 
             return filename
+        
 
             
 
@@ -139,20 +141,24 @@ class FolderMaker():
                 if isinstance(value, (dict, list)):
                     if last_item == True:
                         new_test = self.check_text(key, counterstart=1)
-                        print(f"new test is {new_test}")
-                        print(f"key is {key}")
-                        print(f"{path_symbol}{key}-{counter}")
+                        #print(f"new test is {new_test}")
+                        #print(f"key is {key}")
+                        print(f"{path_symbol}{new_test}-{counter}")
                         os.mkdir(f"{key}-{counter}")
                         counternew = counter-1
                         os.chdir("..")
                     else:
                         if bool(value)==True:
-                            print(f"{path_symbol}{key}-{counter}")
+                            new_test = self.check_text(key, counterstart=1)
+                            #print(f"new test is {new_test}")
+                            print(f"{path_symbol}{new_test}-{counter}")
                             os.mkdir(f"{key}-{counter}")
                             os.chdir(f"{key}-{counter}")
                             counternew = counter+1
                         else:
-                            print(f"{path_symbol}{key}-{counter}")
+                            new_test = self.check_text(key, counterstart=1)
+                            #print(f"new test is {new_test}")
+                            print(f"{path_symbol}{new_test}-{counter}")
                             os.mkdir(f"{key}-{counter}")
                             counternew = counter
 
