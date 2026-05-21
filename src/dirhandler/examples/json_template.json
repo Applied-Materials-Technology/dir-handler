@@ -1,0 +1,18 @@
+{
+    "project_root": {
+        "data": {
+            "raw": null,
+            "processed": null
+        },
+        "src": {
+            "components": null,
+            "utils": null
+        },
+        "experiment[3]": {
+            "logs": null,
+            "weights": null,
+            "run_info[2]": null
+        },
+        "documentation": ["intro", "api[2]", "appendix"]
+    }
+}
