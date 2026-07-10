@@ -22,12 +22,14 @@ def parse_placeholder(key):
     match = re.match(r"^(.+)\[(\d+)\]$", key)
     if match:
         base_name = match.group(1)
+        print(base_name)
         count = int(match.group(2))
         keys = [f"{base_name}{i}" for i in range(1, count + 1)]
     else:
         keys = [key]
 
     return keys
+
 
 def create_structure(base_path, structure):
     """
@@ -62,7 +64,12 @@ def create_structure(base_path, structure):
             elif isinstance(item, dict):
                 create_structure(base_path, item)
 
-def start(filename, example):
+def start(filename, example, testing=False, translations = {}):
+
+    if testing == True:
+        path_start = "./testpath"
+    else:
+        path_start = "."
 
     if example == True:
         filepath = "src/dirhandler/examples/"
@@ -73,9 +80,11 @@ def start(filename, example):
     with open(json_template, 'r') as f:
         folder_data = json.load(f)
     
-    target_directory = "./my_generated_project"
+    #target_directory = "./my_generated_project"
+    target_directory = path_start+"/my_generated_project"
     
     print(f"Generating folder structure in: {os.path.abspath(target_directory)}")
     create_structure(target_directory, folder_data)
     print("Folder structure created successfully!")
+
 
