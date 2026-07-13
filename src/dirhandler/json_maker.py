@@ -3,7 +3,7 @@ import os
 import re
 import pathlib
 
-def parse_placeholder(key):
+def parse_placeholder(key, tranlsations):
     """
     Checks if a key contains a placeholder
 
@@ -19,19 +19,26 @@ def parse_placeholder(key):
     keys: list
         List of generated names
     """
-    match = re.match(r"^(.+)\[(\d+)\]$", key)
-    if match:
-        base_name = match.group(1)
-        print(base_name)
-        count = int(match.group(2))
-        keys = [f"{base_name}{i}" for i in range(1, count + 1)]
+
+    match = re.match(r"^(.+)\[(.+)\]$", key)
+    if not match:
+        return [key]
+
+    base_name = match.group(1)
+    token = match.group(2)
+
+    if token.isdigit():
+        count = int(token)
+        mycount = [f"{base_name}{i}" for i in range(1, count + 1)]
+        return mycount
+    
     else:
-        keys = [key]
+        count = tranlsations[token]
+        mycount = [f"{base_name}{i}" for i in count]
+        return mycount
 
-    return keys
 
-
-def create_structure(base_path, structure):
+def create_structure(base_path, structure, tranlsations):
     """
     Recursively traverses the JSON structure and creates folders.
 
@@ -45,24 +52,24 @@ def create_structure(base_path, structure):
     """
     if isinstance(structure, dict):
         for key, value in structure.items():
-            resolved_keys = parse_placeholder(key)
+            resolved_keys = parse_placeholder(key, tranlsations)
             
             for folder_name in resolved_keys:
                 current_path = os.path.join(base_path, folder_name)
                 os.makedirs(current_path, exist_ok=True)
                 
                 if value:
-                    create_structure(current_path, value)
+                    create_structure(current_path, value, tranlsations)
                     
     elif isinstance(structure, list):
 
         for item in structure:
             if isinstance(item, str):
-                resolved_keys = parse_placeholder(item)
+                resolved_keys = parse_placeholder(item, tranlsations)
                 for folder_name in resolved_keys:
                     os.makedirs(os.path.join(base_path, folder_name), exist_ok=True)
             elif isinstance(item, dict):
-                create_structure(base_path, item)
+                create_structure(base_path, item, tranlsations)
 
 def start(filename, example, testing=False, translations = {}):
 
@@ -84,7 +91,7 @@ def start(filename, example, testing=False, translations = {}):
     target_directory = path_start+"/my_generated_project"
     
     print(f"Generating folder structure in: {os.path.abspath(target_directory)}")
-    create_structure(target_directory, folder_data)
+    create_structure(target_directory, folder_data, translations)
     print("Folder structure created successfully!")
 
 

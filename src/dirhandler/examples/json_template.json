@@ -8,7 +8,7 @@
             "components": null,
             "utils": null
         },
-        "experiment[3]": {
+        "experiment[testword]": {
             "logs": null,
             "weights": null,
             "run_info[2]": null

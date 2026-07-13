@@ -1,4 +1,6 @@
 import dirhandler as dh
 import json
 
-dh.json_maker.start("json_template.json", True, True)
+tranlsations = {"testword": ["one", "two", "three"]}
+
+dh.json_maker.start("json_template.json", True, True, tranlsations)
