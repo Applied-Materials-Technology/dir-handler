@@ -87,7 +87,6 @@ def start(filename, example, testing=False, translations = {}):
     with open(json_template, 'r') as f:
         folder_data = json.load(f)
     
-    #target_directory = "./my_generated_project"
     target_directory = path_start+"/my_generated_project"
     
     print(f"Generating folder structure in: {os.path.abspath(target_directory)}")
