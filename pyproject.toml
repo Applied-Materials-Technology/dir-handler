@@ -23,7 +23,7 @@ dependencies = [
 ]
 
 [project.scripts]
-makedirs = "dirhandler.foldermaker:startclick"
+dhjson = "dirhandler.json_maker:startclick"
 
 
 [tool.setuptools.packages.find]

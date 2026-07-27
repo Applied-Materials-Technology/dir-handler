@@ -2,8 +2,9 @@ import json
 import os
 import re
 import pathlib
+import click
 
-def parse_placeholder(key, tranlsations):
+def parse_placeholder(key, translations):
     """
     Checks if a key contains a placeholder
 
@@ -20,6 +21,9 @@ def parse_placeholder(key, tranlsations):
         List of generated names
     """
 
+    if translations == {}:
+        return [key]
+
     match = re.match(r"^(.+)\[(.+)\]$", key)
     if not match:
         return [key]
@@ -33,12 +37,12 @@ def parse_placeholder(key, tranlsations):
         return mycount
     
     else:
-        count = tranlsations[token]
+        count = translations[token]
         mycount = [f"{base_name}{i}" for i in count]
         return mycount
 
 
-def create_structure(base_path, structure, tranlsations):
+def create_structure(base_path, structure, translations):
     """
     Recursively traverses the JSON structure and creates folders.
 
@@ -52,26 +56,35 @@ def create_structure(base_path, structure, tranlsations):
     """
     if isinstance(structure, dict):
         for key, value in structure.items():
-            resolved_keys = parse_placeholder(key, tranlsations)
+            resolved_keys = parse_placeholder(key, translations)
             
             for folder_name in resolved_keys:
                 current_path = os.path.join(base_path, folder_name)
                 os.makedirs(current_path, exist_ok=True)
                 
                 if value:
-                    create_structure(current_path, value, tranlsations)
+                    create_structure(current_path, value, translations)
                     
     elif isinstance(structure, list):
 
         for item in structure:
             if isinstance(item, str):
-                resolved_keys = parse_placeholder(item, tranlsations)
+                resolved_keys = parse_placeholder(item, translations)
                 for folder_name in resolved_keys:
                     os.makedirs(os.path.join(base_path, folder_name), exist_ok=True)
             elif isinstance(item, dict):
-                create_structure(base_path, item, tranlsations)
+                create_structure(base_path, item, translations)
 
-def start(filename, example, testing=False, translations = {}):
+
+@click.command()
+@click.option('--filename', default='examples/nestedtstruc.json', help="path to json file to read structure")
+@click.option('--example', '-x', is_flag=True, help="takes example file structures when present")
+@click.option('--testing', '-t', is_flag=True, help="takes example file structures when present")
+@click.option('--translations', default={}, help="dictionary of translations for placeholders")
+def startclick(filename, example=False, testing=False, translations = {}):
+
+    if type(translations) == str:
+        translations = json.loads(translations)
 
     if testing == True:
         path_start = "./testpath"
@@ -93,4 +106,7 @@ def start(filename, example, testing=False, translations = {}):
     create_structure(target_directory, folder_data, translations)
     print("Folder structure created successfully!")
 
+def start(filename="testfile", example=False, testing=False, translations = {}):
+
+    startclick.callback(filename, example, testing, translations)
 
