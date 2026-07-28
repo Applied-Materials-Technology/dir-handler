@@ -34,7 +34,6 @@ def parse_placeholder(key, translations):
     if token.isdigit():
         count = int(token)
         mycount = [f"{base_name}{i}" for i in range(1, count + 1)]
-        print(mycount)
         return mycount
     
     else:
@@ -80,7 +79,7 @@ def create_structure(base_path, structure, translations):
 
 
 @click.command()
-@click.option('--filename', default='examples/nestedtstruc.json', help="path to json file to read structure")
+@click.option('--filename', default='json_template.json', help="path to json file to read structure")
 @click.option('--example', '-x', is_flag=True, help="takes example file structures when present")
 @click.option('--testing', '-t', is_flag=True, help="takes example file structures when present")
 @click.option('--translations', default={}, help="dictionary of translations for placeholders")

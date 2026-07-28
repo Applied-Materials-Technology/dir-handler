@@ -39,14 +39,14 @@ pip install -e .
 **Example Usage**
 Make sure your virtual environment with the package installed is activated.
 
-Create folders from the default example file stored at src/dirhandler/examples/nestedstruct.json in your current directory:
+Create folders from the default example file stored at src/dirhandler/examples/json_template.json in your current directory:
 ```shell
 makedirs -x
 ```
 
 Create folders from a specific example file stored at src/dirhandler/examples/ in your current directory:
 ```shell
-makedirs -x --filename examples/name_of_example.json
+makedirs --filename examples/name_of_example.json -x
 ```
 
 Create folders from a specific JSON file in your current directory:
@@ -54,15 +54,15 @@ Create folders from a specific JSON file in your current directory:
 makedirs --filename path/to/file.json
 ```
 
-Create folders from a specific JSON file in a specific directory:
+Create folders from a specific JSON file with a translations dictionary:
 ```shell
-makedirs --filename path/to/file.json --location path/to/dir_creation
+makedirs --filename path/to/file.json --translations {"my":"dict"}
 ```
 
 **Options**
-- --x : takes example file structures when present without specifiying full path to examples
 - --filename : path to json file to read structure, default = 'examples/nestedtstruc.json'
-- --location : path to create folders in, default = '.'
+- --x : takes example file structures when present without specifiying full path to examples
+- --translations : dictionary of translations for placeholders, default = {}
 
 ### Import in Python Script
 
@@ -85,30 +85,47 @@ dh.levels.start(filename = "path/to/file.json", location = "path/to/dir_creation
 
 ## Creating JSON structures
 
-JSON directory files should follow the following structure
+The following shows how a directory structure file could look, where subfolders could be represented by another dictionary, or a list.
 
 ```json
 {
-  "folder1": {
-    "folder11": {
-      "folder111":{},
-      "folder112":{},
-      "folder113":{}
-    },
-    "folder12": {
-      "folder121": {},
-      "folder122": {}
-    },
-    "folder13": {
-      "folder131": {},
-      "folder132": {}
-    },
-    "folder14": {}
-  },
-  "folder2": {}
+    "folder1": {
+        "folder11": {
+            "folder111": {},
+            "folder112": {}
+        },
+        "folder12": {
+            "folder121": {},
+            "folder122": {}
+        },
+        "folder13[testword]": {
+            "folder131": {},
+            "folder132": {},
+            "folder133[2]": {}
+        },
+        "folder14": ["folder141", "folder142[2]", "folder143"]
+    }
 }
 ```
+Square brackets represent where foldernames contain placeholders. In the example above, folder3[testword] and folder142[2]. Placeholders can be
+integers or strings.
 
-which will result in the following folders:
+An integer placeholder such as folder142[2] should create two folders, folder1421 and folder1422.
 
-<img width="185" height="293" alt="image" src="https://github.com/user-attachments/assets/a1fb2790-1bad-490f-aaac-1059165344fa" />
+A string placeholder requires a translations dictionary.
+
+With a translation dictionary of:
+
+```
+translations = {"testword", "myword"}
+```
+
+folder3[testword] will create one folder - folder3myword.
+
+With a translation dictionary of:
+
+```
+translations = {"testword", ["one","two,"three]}
+```
+
+folder[testword] will create three folders - folder3one, folder3two, folder3three.

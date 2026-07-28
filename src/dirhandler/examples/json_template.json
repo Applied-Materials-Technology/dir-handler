@@ -1,18 +1,21 @@
+
+
 {
-    "project_root": {
-        "data": {
-            "raw": null,
-            "processed": null
+    "folder1": {
+        "folder11": {
+            "folder111": {},
+            "folder112": {}
         },
-        "src": {
-            "components": null,
-            "utils": null
+        "folder12": {
+            "folder121": {},
+            "folder122": {}
         },
-        "experiment[testword]": {
-            "logs": null,
-            "weights": null,
-            "run_info[2]": null
+        "folder13[testword]": {
+            "folder131": {},
+            "folder132": {},
+            "folder133[2]": {}
         },
-        "documentation": ["intro", "api[2]", "appendix"]
+        "folder14": ["folder141", "folder142[2]", "folder143"]
     }
 }
+
