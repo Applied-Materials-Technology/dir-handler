@@ -13,9 +13,13 @@ def test_start_and_create_structure(tmp_path, monkeypatch, capsys):
     json_file.write_text(json.dumps({"project": {"data": {}}}))
 
     dh.start(str(json_file), example=False, testing=True)
-    assert (tmp_path / "testpath" / "my_generated_project" / "project" / "data").is_dir()
+
+    mypath = (tmp_path/"testpath"/"my_generated_project"/"project"/"data")
+    assert mypath.is_dir()
+
     captured = capsys.readouterr()
     assert "Generating folder structure in:" in captured.out
+
 
 def test_start_loads_example_file(monkeypatch, tmp_path):
 
@@ -24,10 +28,13 @@ def test_start_loads_example_file(monkeypatch, tmp_path):
     monkeypatch.chdir(tmp_path)
     example_path = tmp_path / "src" / "dirhandler" / "examples"
     example_path.mkdir(parents=True)
-    (example_path / "sample.json").write_text(json.dumps({"x": {}}))
+    example_path_json = example_path / "sample.json"
+    example_path_json.write_text(json.dumps({"x": {}}))
 
     dh.start("sample.json", example=True, testing=True)
-    assert (tmp_path / "testpath" / "my_generated_project" / "x").is_dir()
+
+    mypath = (tmp_path/"testpath"/"my_generated_project"/"x")
+    assert mypath.is_dir()
 
 
 ### TEST CREATE STRUCTURE
@@ -42,6 +49,7 @@ def test_create_structure_dict(tmp_path):
     assert (tmp_path / "project" / "data").is_dir()
     assert (tmp_path / "project" / "logs").is_dir()
 
+
 def test_create_structure_list_and_placeholder(tmp_path):
 
     # Test if translations are correctly applies to dictionary structure
@@ -54,33 +62,48 @@ def test_create_structure_list_and_placeholder(tmp_path):
     assert (tmp_path / "config" / "envdev").is_dir()
     assert (tmp_path / "config" / "envprod").is_dir()
 
+
 ### TEST PARSE PLACEHOLDER
 
 def test_parse_placeholder_plain():
 
     # Test plain keys without placeholder syntax should return the original key
 
-    assert dh.parse_placeholder("data", {}) == ["data"]
+    result = dh.parse_placeholder("data", {})
+    ex_result = ["data"]
+    
+    assert result == ex_result
+
 
 def test_parse_placeholder_numeric():
 
     # Test numeric placeholders should expand to sequential numbered names
 
-    assert dh.parse_placeholder("run[3]", {}) == ["run1", "run2", "run3"]
+    result = dh.parse_placeholder("run[3]", {})
+    ex_result = ["run1", "run2", "run3"]
+
+    assert result == ex_result
+
 
 def test_parse_placeholder_named_translation():
 
     # Test named placeholders should expand using the provided translations mapping
 
     translations = {"env": ["dev", "prod"]}
-    assert dh.parse_placeholder("service[env]", translations) == ["servicedev", "serviceprod"]
+    result = dh.parse_placeholder("service[env]",translations)
+    ex_result = ["servicedev", "serviceprod"]
+
+    assert result == ex_result
+
 
 def test_parse_placeholder_missing_translation():
 
     # missing translation keys should raise KeyError
 
-    with pytest.raises(KeyError):
-        dh.parse_placeholder("service[missing]", {})
+    result = dh.parse_placeholder("service[missing]", {})
+    ex_result = ["service[missing]"]
+
+    assert result == ex_result
 
 
 ### TEST EDGE CASES
@@ -94,6 +117,7 @@ def test_create_structure_empty_values(tmp_path):
     assert (tmp_path / "project").is_dir()
     assert (tmp_path / "empty").is_dir()
 
+
 def test_create_structure_empty_list(tmp_path):
 
     # Test if an empty list still creates the corresponding folder
@@ -101,6 +125,7 @@ def test_create_structure_empty_list(tmp_path):
     structure = ["folder", []]
     dh.create_structure(tmp_path, structure, {})
     assert (tmp_path / "folder").is_dir()
+
 
 def test_start_invalid_file_raises_file_not_found(monkeypatch, tmp_path):
 

@@ -21,8 +21,8 @@ def parse_placeholder(key, translations):
         List of generated names
     """
 
-    if translations == {}:
-        return [key]
+    # if translations == {}:
+    #     return [key]
 
     match = re.match(r"^(.+)\[(.+)\]$", key)
     if not match:
@@ -34,14 +34,17 @@ def parse_placeholder(key, translations):
     if token.isdigit():
         count = int(token)
         mycount = [f"{base_name}{i}" for i in range(1, count + 1)]
+        print(mycount)
         return mycount
     
     else:
-        count = translations[token]
-        mycount = [f"{base_name}{i}" for i in count]
-        return mycount
-
-
+        try:
+            count = translations[token]
+            mycount = [f"{base_name}{i}" for i in count]
+            return mycount
+        except KeyError:
+            return [key]
+        
 def create_structure(base_path, structure, translations):
     """
     Recursively traverses the JSON structure and creates folders.
