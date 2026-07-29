@@ -6,11 +6,11 @@
             "folder111": {},
             "folder112": {}
         },
-        "folder12": {
+        "folder12[testword]": {
             "folder121": {},
             "folder122": {}
         },
-        "folder13[testword]": {
+        "folder13[testword_list]": {
             "folder131": {},
             "folder132": {},
             "folder133[2]": {}

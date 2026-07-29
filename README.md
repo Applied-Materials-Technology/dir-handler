@@ -60,9 +60,11 @@ makedirs --filename path/to/file.json --translations {"my":"dict"}
 ```
 
 **Options**
-- --filename : path to json file to read structure, default = 'examples/nestedtstruc.json'
+- --filename : path to json file to read structure, default = 'examples/json_template.json'
 - --x : takes example file structures when present without specifiying full path to examples
 - --translations : dictionary of translations for placeholders, default = {}
+- --separator : list of values to separate placeholders and 
+base folder names, default = ["", "", ""]
 
 ### Import in Python Script
 
@@ -73,14 +75,21 @@ Import the directory maker
 import dirhandler as dh
 ```
 
-Create folders from the default example file stored at src/dirhandler/examples/nestedstruct.json in your current directory:
+Set translation dictionary if required:
+
 ```python
-dh.levels.start(x=True) 
+translations = {"testword_list": ["one", "two", "three"], "testword":"mytestword"}
 ```
 
-Create folders from a specific JSON file in a specific directory:
+Create folders from the default example file stored at src/dirhandler/examples/json_template.json in your current directory:
+```python
+dh.json_maker.start(example=True)
+```
+
+Create folders from a specific JSON,
 ```python
 dh.levels.start(filename = "path/to/file.json", location = "path/to/dir_creation")
+dh.json_maker.start(filename = "path/to/file.json", example=True)
 ```
 
 ## Creating JSON structures
@@ -107,10 +116,10 @@ The following shows how a directory structure file could look, where subfolders 
     }
 }
 ```
-Square brackets represent where foldernames contain placeholders. In the example above, folder3[testword] and folder142[2]. Placeholders can be
+Square brackets represent where foldernames contain placeholders. In the example above, `folder3[testword]` and `folder142[2]`. Placeholders can be
 integers or strings.
 
-An integer placeholder such as folder142[2] should create two folders, folder1421 and folder1422.
+An integer placeholder such as `folder142[2]` should create two folders, `folder1421` and `folder1422`.
 
 A string placeholder requires a translations dictionary.
 
@@ -120,7 +129,7 @@ With a translation dictionary of:
 translations = {"testword", "myword"}
 ```
 
-folder3[testword] will create one folder - folder3myword.
+`folder3[testword]` will create one folder - `folder3myword`.
 
 With a translation dictionary of:
 
@@ -128,4 +137,4 @@ With a translation dictionary of:
 translations = {"testword", ["one","two,"three]}
 ```
 
-folder[testword] will create three folders - folder3one, folder3two, folder3three.
+`folder[testword]` will create three folders - `folder3one`, `folder3two`, `folder3three`.
