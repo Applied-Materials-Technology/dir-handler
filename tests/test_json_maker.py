@@ -44,7 +44,10 @@ def test_create_structure_dict(tmp_path):
     # Test if simple dictionary creates the correct folder structure
 
     structure = {"project": {"data": {}, "logs": {}}}
-    dh.create_structure(tmp_path, structure, {})
+    dh.create_structure(base_path = tmp_path, 
+                        structure = structure, 
+                        translations = {},
+                        separator=["","",""])
     assert (tmp_path / "project").is_dir()
     assert (tmp_path / "project" / "data").is_dir()
     assert (tmp_path / "project" / "logs").is_dir()
@@ -56,7 +59,10 @@ def test_create_structure_list_and_placeholder(tmp_path):
 
     structure = ["run[2]", {"config": ["env[test]"]}]
     translations = {"test": ["dev", "prod"]}
-    dh.create_structure(tmp_path, structure, translations)
+    dh.create_structure(base_path = tmp_path, 
+                        structure = structure, 
+                        translations = translations,
+                        separator=["","",""])
     assert (tmp_path / "run1").is_dir()
     assert (tmp_path / "run2").is_dir()
     assert (tmp_path / "config" / "envdev").is_dir()
@@ -69,7 +75,9 @@ def test_parse_placeholder_plain():
 
     # Test plain keys without placeholder syntax should return the original key
 
-    result = dh.parse_placeholder("data", {})
+    result = dh.parse_placeholder(key="data",
+                                  translations = {}, 
+                                  separator = ["","",""])
     ex_result = ["data"]
     
     assert result == ex_result
@@ -79,7 +87,9 @@ def test_parse_placeholder_numeric():
 
     # Test numeric placeholders should expand to sequential numbered names
 
-    result = dh.parse_placeholder("run[3]", {})
+    result = dh.parse_placeholder(key = "run[3]", 
+                                  translations = {}, 
+                                  separator = ["","",""])
     ex_result = ["run1", "run2", "run3"]
 
     assert result == ex_result
@@ -90,7 +100,9 @@ def test_parse_placeholder_named_translation():
     # Test named placeholders should expand using the provided translations mapping
 
     translations = {"env": ["dev", "prod"]}
-    result = dh.parse_placeholder("service[env]",translations)
+    result = dh.parse_placeholder(key = "service[env]",
+                                  translations = translations, 
+                                  separator = ["","",""])
     ex_result = ["servicedev", "serviceprod"]
 
     assert result == ex_result
@@ -100,7 +112,9 @@ def test_parse_placeholder_missing_translation():
 
     # missing translation keys should raise KeyError
 
-    result = dh.parse_placeholder("service[missing]", {})
+    result = dh.parse_placeholder(key = "service[missing]", 
+                                  translations = {}, 
+                                  separator = ["","",""])
     ex_result = ["service[missing]"]
 
     assert result == ex_result
@@ -113,7 +127,10 @@ def test_create_structure_empty_values(tmp_path):
     # Test if empty lists and dictionaries still create the corresponding folders
 
     structure = {"project": [], "empty": {}}
-    dh.create_structure(tmp_path, structure, {})
+    dh.create_structure(base_path = tmp_path, 
+                        structure = structure, 
+                        translations = {}, 
+                        separator = ["","",""])
     assert (tmp_path / "project").is_dir()
     assert (tmp_path / "empty").is_dir()
 
@@ -123,7 +140,10 @@ def test_create_structure_empty_list(tmp_path):
     # Test if an empty list still creates the corresponding folder
 
     structure = ["folder", []]
-    dh.create_structure(tmp_path, structure, {})
+    dh.create_structure(base_path = tmp_path, 
+                        structure = structure, 
+                        translations = {}, 
+                        separator = ["","",""])
     assert (tmp_path / "folder").is_dir()
 
 
@@ -133,4 +153,6 @@ def test_start_invalid_file_raises_file_not_found(monkeypatch, tmp_path):
 
     monkeypatch.chdir(tmp_path)
     with pytest.raises(FileNotFoundError):
-        dh.start("missing.json", example=False, testing=True)
+        dh.start(filename = "missing.json", 
+                 example=False, 
+                 testing=True)
