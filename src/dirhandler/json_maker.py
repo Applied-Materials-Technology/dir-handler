@@ -85,7 +85,7 @@ def create_structure(base_path, structure, translations, separator):
 @click.option('--example', '-x', is_flag=True, help="takes example file structures when present")
 @click.option('--testing', '-t', is_flag=True, help="takes example file structures when present")
 @click.option('--translations', default={}, help="dictionary of translations for placeholders")
-@click.option('--separator', default=["","",""], help="What to seperate default and placeholder names with")
+@click.option('--separator', default=["","",""], help="What to seperate default and placeholder names with. Order - int, str, list")
 def startclick(filename, example=False, testing=False, translations = {}, separator=["","",""]):
 
     if type(translations) == str:

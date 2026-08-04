@@ -156,3 +156,20 @@ def test_start_invalid_file_raises_file_not_found(monkeypatch, tmp_path):
         dh.start(filename = "missing.json", 
                  example=False, 
                  testing=True)
+
+def test_separator_vals(tmp_path):
+
+    # Test if separator values are inserted correctly
+
+    structure = ["runint[2]","runstr[testword]","runlist[testword_list]"]
+    translations = {"testword_list": ["one", "two", "three"], "testword":"mytestword"}
+    dh.create_structure(base_path = tmp_path, 
+                    structure = structure, 
+                    translations = translations,
+                    separator=["int","str","list"])
+
+    assert (tmp_path / "runintint1").is_dir()
+    assert (tmp_path / "runstrstrmytestword").is_dir()
+    assert (tmp_path / "runlistlistone").is_dir()
+
+
