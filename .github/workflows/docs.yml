@@ -2,7 +2,7 @@ name: Deploy Sphinx Docs to GitHub Pages
 
 on:
   push:
-    branches: ["main, docs"]
+    branches: [main, docs]
 
 permissions:
   contents: read
