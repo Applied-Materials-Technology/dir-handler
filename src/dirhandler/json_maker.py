@@ -3,6 +3,7 @@ import os
 import re
 import pathlib
 import click
+import filename_opts
 
 def parse_placeholder(key, translations, separator):
     """
@@ -98,6 +99,12 @@ def startclick(filename, example=False, testing=False, translations = {}, separa
             separator = [separator[0], separator[0], separator[0]]
         if len(separator) == 2:
             separator = [separator[0], separator[1], separator[1]]
+
+    if type(filename) is str:
+        json_file_name = filename.endswith(".json")
+        if json_file_name == False:
+            print("Getting template...")
+            filename = filename_opts.set_json(filename)
 
 
     if testing == True:
