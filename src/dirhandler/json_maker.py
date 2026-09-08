@@ -3,7 +3,7 @@ import os
 import re
 import pathlib
 import click
-import filename_opts
+from dirhandler.filename_opts import *
 
 def parse_placeholder(key, translations, separator):
     """

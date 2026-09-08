@@ -2,10 +2,6 @@ from dataclasses import dataclass
 from typing import List
 from enum import Enum
 
-@dataclass(slots=True)
-class filename_opts:
-
-    placeholder_key: List = ["[", "]"]
 
 class Jsonfile(Enum):
     EXAMPLE = "json_template.json"
