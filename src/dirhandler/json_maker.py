@@ -1,8 +1,9 @@
 import json
-import os
 import re
 import pathlib
+from pathlib import Path
 import click
+from dirhandler.filename_opts import *
 
 def parse_placeholder(key, translations, separator):
     """
@@ -63,8 +64,8 @@ def create_structure(base_path, structure, translations, separator):
             resolved_keys = parse_placeholder(key, translations, separator)
             
             for folder_name in resolved_keys:
-                current_path = os.path.join(base_path, folder_name)
-                os.makedirs(current_path, exist_ok=True)
+                current_path = Path(base_path) / folder_name
+                Path(current_path).mkdir(parents=True, exist_ok=True)
                 
                 if value:
                     create_structure(current_path, value, translations, separator)
@@ -75,7 +76,8 @@ def create_structure(base_path, structure, translations, separator):
             if isinstance(item, str):
                 resolved_keys = parse_placeholder(item, translations, separator)
                 for folder_name in resolved_keys:
-                    os.makedirs(os.path.join(base_path, folder_name), exist_ok=True)
+                    joined_path = Path(base_path) / folder_name
+                    Path(joined_path).mkdir(parents=True, exist_ok=True)
             elif isinstance(item, dict):
                 create_structure(base_path, item, translations, separator)
 
@@ -99,6 +101,12 @@ def startclick(filename, example=False, testing=False, translations = {}, separa
         if len(separator) == 2:
             separator = [separator[0], separator[1], separator[1]]
 
+    if type(filename) is str:
+        json_file_name = filename.endswith(".json")
+        if json_file_name == False:
+            print("Getting template...")
+            filename = filename_opts.set_json(filename)
+
 
     if testing == True:
         path_start = "./testpath"
@@ -107,16 +115,18 @@ def startclick(filename, example=False, testing=False, translations = {}, separa
 
     if example == True:
         filepath = "src/dirhandler/examples/"
-        json_template = os.path.join(filepath, filename)
+        json_template = Path(filepath) / filename
     else:
         json_template = filename
 
     with open(json_template, 'r') as f:
         folder_data = json.load(f)
     
-    target_directory = path_start+"/my_generated_project"
+    target_directory = Path(path_start) / "my_generated_project"
+
+    abs_path = Path.resolve(target_directory)
     
-    print(f"Generating folder structure in: {os.path.abspath(target_directory)}")
+    print(f"Generating folder structure in: {abs_path}")
     create_structure(target_directory, folder_data, translations, separator)
     print("Folder structure created successfully!")
 
